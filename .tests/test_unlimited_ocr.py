@@ -1,110 +1,115 @@
 #!/usr/bin/env python3
-"""Test UnlimitedOCR independently on a PDF"""
+"""Generic OCR test script for UnlimitedOCR
+
+Usage:
+  python test_unlimited_ocr.py [image_file]
+
+Examples:
+  python test_unlimited_ocr.py Test_File.jpg
+  python test_unlimited_ocr.py test_image.png
+  python test_unlimited_ocr.py document.jpg  # Default: Test_File.jpg
+"""
 
 import sys
 from pathlib import Path
 import time
 
-# Test 1: Import UnlimitedOCR
-print("=" * 60)
-print("TEST 1: Import UnlimitedOCR")
-print("=" * 60)
+def run_ocr_test(image_path):
+    """Run OCR test on specified image file"""
 
-try:
+    # Setup logging to both stdout and file
+    test_dir = Path(__file__).parent
+    image_file = Path(image_path)
+    log_filename = image_file.name + ".log"
+    log_file = test_dir / log_filename
+
+    log_handle = open(log_file, "w", encoding="utf-8")
+
+    def log_print(*args, **kwargs):
+        """Print to both stdout and log file"""
+        print(*args, **kwargs)
+        print(*args, file=log_handle, **kwargs)
+        log_handle.flush()
+
+    log_print("=" * 70)
+    log_print(f"Testing UnlimitedOCR with {image_file.name}")
+    log_print("=" * 70)
+
+    # Import and initialize
     from unlimited_ocr import UnlimitedOCR
-    print("✓ Successfully imported UnlimitedOCR")
-except ImportError as e:
-    print(f"❌ Failed to import: {e}")
-    sys.exit(1)
 
-# Test 2: Initialize model
-print("\n" + "=" * 60)
-print("TEST 2: Initialize UnlimitedOCR")
-print("=" * 60)
-
-try:
     ocr = UnlimitedOCR()
-    print(f"✓ Initialized: {ocr.get_name()}")
-    print(f"  Device: {ocr._device}")
-    print(f"  GPU Memory: {ocr._gpu_memory:.1f}GB")
-except Exception as e:
-    print(f"❌ Failed to initialize: {e}")
-    sys.exit(1)
+    log_print(f"\n✓ Initialized: {ocr.get_name()}")
+    log_print(f"  Device: {ocr._device}")
+    log_print(f"  GPU Memory: {ocr._gpu_memory:.1f}GB")
 
-# Test 3: Convert PDF to image
-print("\n" + "=" * 60)
-print("TEST 3: Convert PDF to Image")
-print("=" * 60)
+    # Verify image exists
+    if not image_file.exists():
+        log_print(f"\n❌ Test image not found: {image_file.absolute()}")
+        log_handle.close()
+        return False
 
-pdf_path = Path(__file__).parent / "TestDocument.pdf"
-if not pdf_path.exists():
-    print(f"❌ Test PDF not found: {pdf_path}")
-    sys.exit(1)
+    file_size_mb = image_file.stat().st_size / (1024*1024)
+    log_print(f"\nProcessing: {image_file.name} ({file_size_mb:.2f}MB)")
+    log_print("-" * 70)
 
-try:
-    import fitz  # PyMuPDF
-    print(f"✓ PyMuPDF available")
-
-    # Open PDF and convert first page to image
-    pdf_doc = fitz.open(str(pdf_path))
-    print(f"  PDF has {len(pdf_doc)} pages")
-
-    # Render first page to image
-    page = pdf_doc[0]
-    pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))  # 2x zoom for better OCR
-
-    # Save as temp image
-    temp_image = Path(__file__).parent / "test_page_0.png"
-    pix.save(str(temp_image))
-    print(f"✓ Converted page 0 to image: {temp_image.name}")
-
-except ImportError:
-    print("⚠️  PyMuPDF not installed. Using a dummy test image instead...")
-    # Create a simple test image if PyMuPDF not available
     try:
-        from PIL import Image, ImageDraw, ImageFont
-        temp_image = Path(__file__).parent / "test_page_0.png"
-        img = Image.new('RGB', (400, 200), color='white')
-        draw = ImageDraw.Draw(img)
-        draw.text((10, 10), "Test OCR Document\nUnlimitedOCR Test", fill='black')
-        img.save(str(temp_image))
-        print(f"✓ Created test image: {temp_image.name}")
+        start = time.time()
+        text, details = ocr.process_image(str(image_file))
+        elapsed = time.time() - start
+
+        log_print("-" * 70)
+        log_print(f"\n✓ OCR completed in {elapsed:.2f}s\n")
+
+        log_print("EXTRACTED TEXT:")
+        log_print("=" * 70)
+        if text:
+            log_print(text)
+        else:
+            log_print("[NO TEXT EXTRACTED]")
+        log_print("=" * 70)
+
+        if details:
+            log_print(f"\nCharacter details: {len(details)} chars")
+            log_print("First 20 characters:")
+            for i, detail in enumerate(details[:20]):
+                char = detail.get('char', '?')
+                conf = detail.get('confidence', 0)
+                log_print(f"  {i+1:2d}. '{char}' confidence: {conf:.2%}")
+        else:
+            log_print("\n[NO CHARACTER DETAILS]")
+
+        log_print(f"\n✓ Log file: {log_file}")
+        log_handle.close()
+        return True
+
     except Exception as e:
-        print(f"❌ Failed to create test image: {e}")
-        sys.exit(1)
+        log_print(f"\n❌ Error: {e}")
+        import traceback
+        traceback.print_exc(file=log_handle)
+        log_handle.close()
+        return False
 
-# Test 4: Run OCR
-print("\n" + "=" * 60)
-print("TEST 4: Run OCR on Image")
-print("=" * 60)
+if __name__ == "__main__":
+    test_dir = Path(__file__).parent
 
-try:
-    print(f"Processing: {temp_image.name}")
-    start_time = time.time()
+    # Get image file from command line or use default
+    if len(sys.argv) > 1:
+        image_file = Path(sys.argv[1])
+        # If relative path, check if it exists in test directory
+        if not image_file.is_absolute() and not image_file.exists():
+            test_image = test_dir / image_file.name
+            if test_image.exists():
+                image_file = test_image
+    else:
+        # Default to Test_File.jpg if available
+        default_file = test_dir / "Test_File.jpg"
+        if default_file.exists():
+            image_file = default_file
+        else:
+            print("Usage: python test_unlimited_ocr.py <image_file>")
+            print("  No default image found. Please specify an image file.")
+            sys.exit(1)
 
-    text, details = ocr.process_image(str(temp_image))
-
-    elapsed = time.time() - start_time
-    print(f"✓ OCR completed in {elapsed:.2f}s")
-    print(f"\n--- Extracted Text ---")
-    print(text)
-    print(f"\n--- Character Details ---")
-    if details:
-        print(f"Total characters: {len(details)}")
-        print(f"First 10 chars with confidence:")
-        for i, detail in enumerate(details[:10]):
-            print(f"  {i+1}. '{detail.get('char', '?')}' - confidence: {detail.get('confidence', 0):.2%}")
-
-    # Cleanup
-    temp_image.unlink()
-    print(f"\n✓ Cleaned up {temp_image.name}")
-
-except Exception as e:
-    print(f"❌ OCR failed: {e}")
-    import traceback
-    traceback.print_exc()
-    sys.exit(1)
-
-print("\n" + "=" * 60)
-print("✓ ALL TESTS PASSED")
-print("=" * 60)
+    success = run_ocr_test(str(image_file))
+    sys.exit(0 if success else 1)

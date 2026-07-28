@@ -60,7 +60,7 @@ requirements.txt.backup-*
 Unlimited-OCR/.cache/
 Unlimited-OCR/__pycache__/
 
-# Test output (logs, generated files)
+# Test output (logs, generated files) - allow .py scripts, exclude logs/output
 .tests/*.log
 .tests/images/
 .tests/output/
