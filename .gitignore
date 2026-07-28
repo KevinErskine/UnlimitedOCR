@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project-specific
+venv/
+__pycache__
+*.pyc
+.cuda_cache/
+.transformer_cache/
+huggingface/
+models/
+
+# ML model cache (downloaded at runtime)
+.cache/
+.huggingface/
+
+# Environment
+.env
+.env.local
+*.log
+
+# Backup files
+*.backup
+*.bak
+requirements.txt.backup-*
+
+# Unlimited-OCR vendored model cache
+Unlimited-OCR/.cache/
+Unlimited-OCR/__pycache__/

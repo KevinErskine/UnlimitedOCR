@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unlimited-ocr"
+version = "0.1.0"
+description = "Baidu Unlimited-OCR backend for local, private OCR processing (vision-language model)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache License 2.0" }
+authors = [{ name = "Kevin Erskine", email = "kevin.b.erskine@gmail.com" }]
+keywords = ["ocr", "vision", "ml", "transformers", "torch", "unlimited-ocr"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+]
+
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "transformers==4.57.1",
+    "accelerate>=0.24.0",
+    "bitsandbytes>=0.41.0",
+    "numpy>=1.24.0",
+    "Pillow>=11.0.0",
+    "einops>=0.7.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "black>=23.0",
+    "isort>=5.0",
+    "flake8>=6.0",
+]
+
+[tool.setuptools]
+packages = ["unlimited_ocr"]
+
+[tool.setuptools.package-data]
+unlimited_ocr = ["Unlimited-OCR/**/*", "Unlimited-OCR"]
+
+[project.urls]
+Homepage = "https://github.com/baidu/Unlimited-OCR"
+Documentation = "https://github.com/baidu/Unlimited-OCR"
+Repository = "https://github.com/baidu/Unlimited-OCR"

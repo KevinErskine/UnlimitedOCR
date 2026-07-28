@@ -1,0 +1,17 @@
+# Unlimited-OCR: CUDA 12.1 Installation (RTX 4060 optimized)
+#
+# STEP 1: Create venv
+#   python -m venv venv
+#   .\venv\Scripts\Activate.ps1
+#
+# STEP 2: Install torch with CUDA 12.1 support (THIS IS REQUIRED FOR GPU)
+#   pip install --upgrade pip
+#   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+#
+# STEP 3: Install remaining dependencies
+#   pip install -r requirements.txt
+
+# After installation, verify CUDA is available:
+#   python -c "import torch; print('CUDA available:', torch.cuda.is_available())"
+
+# Note: Do NOT use normal "pip install torch" as it installs CPU-only version
