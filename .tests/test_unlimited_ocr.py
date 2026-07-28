@@ -14,6 +14,9 @@ import sys
 from pathlib import Path
 import time
 
+# Add parent directory to path so we can import unlimited_ocr
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 def run_ocr_test(image_path):
     """Run OCR test on specified image file"""
 
