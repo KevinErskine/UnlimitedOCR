@@ -24,7 +24,7 @@ $failed = 0
 foreach ($image in $testImages) {
     Write-Host ""
     Write-Host "Running: $image" -ForegroundColor Yellow
-    Write-Host "-" * 70
+    Write-Host ("-" * 70)
     python test_unlimited_ocr.py $image
     if ($LASTEXITCODE -eq 0) {
         Write-Host "PASSED: $image" -ForegroundColor Green
