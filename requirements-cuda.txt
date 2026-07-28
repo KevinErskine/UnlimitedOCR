@@ -1,8 +1,8 @@
 # Unlimited-OCR: CUDA 12.1 Installation (RTX 4060 optimized)
 #
 # STEP 1: Create venv
-#   python -m venv venv
-#   .\venv\Scripts\Activate.ps1
+#   python -m venv .venv
+#   ..\.venv\Scripts\Activate.ps1
 #
 # STEP 2: Install torch with CUDA 12.1 support (THIS IS REQUIRED FOR GPU)
 #   pip install --upgrade pip
