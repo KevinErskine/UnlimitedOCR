@@ -13,8 +13,8 @@ Baidu Unlimited-OCR backend for local, private OCR processing using vision-langu
 
 **For GPU (RTX 4060 with CUDA 12.1) — RECOMMENDED:**
 ```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
+python -m venv .venv
+..\.venv\Scripts\Activate.ps1
 
 pip install --upgrade pip
 # Install torch with CUDA 12.1 support (required for GPU)
@@ -25,8 +25,8 @@ pip install -r requirements.txt
 
 **For CPU only (slow, not recommended):**
 ```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
+python -m venv .venv
+..\.venv\Scripts\Activate.ps1
 
 pip install --upgrade pip
 pip install -r requirements.txt  # Gets CPU-only torch
@@ -78,22 +78,24 @@ UNLIMITED_OCR_REPO=/path/to/Unlimited-OCR
 ## Architecture
 
 ```
-UnlimitedOCR (this package)
-├── ocr_unlimited.py          # Main class (no deps on JournalOCR)
-├── Unlimited-OCR/            # Vendored copy of Baidu's repo (static)
-├── requirements.txt          # ML stack only
-└── pyproject.toml           # Package metadata
+unlimited_ocr/                                    # Package directory
+├── __init__.py                                  # Package init
+├── ocr_unlimited.py                             # Main class (no deps on JournalOCR)
+├── Unlimited-OCR/                               # Vendored copy of Baidu's repo (static)
+requirements.txt                                 # ML stack only
+pyproject.toml                                   # Package metadata
+.gitignore                                       # Python + ML cache patterns
 ```
 
 **Design**: UnlimitedOCR is **independent** of JournalOCR. JournalOCR imports it via registry.
 
 ## Updating Vendored Unlimited-OCR
 
-The `./Unlimited-OCR/` folder is a static snapshot of https://github.com/baidu/Unlimited-OCR.
+The `unlimited_ocr/Unlimited-OCR/` folder is a static snapshot of https://github.com/baidu/Unlimited-OCR.
 
 To update:
 1. Test new Baidu release in isolation
-2. Back up current `./Unlimited-OCR/`
+2. Back up current `unlimited_ocr/Unlimited-OCR/`
 3. Copy new version
 4. Verify `ocr_unlimited.py` still works
 5. Commit with message: `chore: Update vendored Unlimited-OCR to <commit-hash>`

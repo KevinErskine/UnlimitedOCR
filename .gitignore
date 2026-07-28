@@ -35,7 +35,6 @@ ENV/
 .DS_Store
 
 # Project-specific
-venv/
 __pycache__
 *.pyc
 .cuda_cache/

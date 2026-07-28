@@ -54,19 +54,18 @@ text, char_details = ocr.process_image("path/to/image.jpg")
 
 ## Testing
 
-Test changes with real images to verify OCR quality. A `tests/` folder holds test inputs and scripts:
+Test changes with real images to verify OCR quality. A `tests/` folder (to be created) will hold test inputs and scripts:
 
-- `tests/test_with_testimage.py` — validates basic OCR on `.jpg` files
-- `tests/test_with_pdf.py` — validates PDF → image conversion and OCR
-- Test data: `TestImage.jpg`, `TestDocument.pdf` (at project root)
+- `tests/test_with_testimage.py` — validates basic OCR on `.jpg` files (deferred: Step 1: Testing Infrastructure)
+- `tests/test_with_pdf.py` — validates PDF → image conversion and OCR (deferred: Step 1: Testing Infrastructure)
 
-Run tests from project root:
+Run tests from project root (when implemented):
 ```powershell
 python tests/test_with_testimage.py
 python tests/test_with_pdf.py
 ```
 
-All test output should show extracted character count > 0 and confidence ≥ 95%.
+Expected output: extracted character count > 0 and confidence ≥ 95%.
 
 ## Integration with JournalOCR
 
