@@ -7,7 +7,7 @@ Write-Host "====================================================================
 Write-Host ""
 
 # Activate venv once
-$venvActivate = "..\venv\Scripts\Activate.ps1"
+$venvActivate = "..\.venv\Scripts\Activate.ps1"
 if (Test-Path $venvActivate) {
     & $venvActivate
 } else {
