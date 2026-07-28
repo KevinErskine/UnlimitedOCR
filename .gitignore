@@ -60,5 +60,7 @@ requirements.txt.backup-*
 Unlimited-OCR/.cache/
 Unlimited-OCR/__pycache__/
 
-# Test directories
-.tests/
+# Test output (logs, generated files)
+.tests/*.log
+.tests/images/
+.tests/output/
