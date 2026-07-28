@@ -18,7 +18,8 @@ Write-Host ""
 $venvActivate = "..\venv\Scripts\Activate.ps1"
 if (Test-Path $venvActivate) {
     & $venvActivate
-} else {
+}
+else {
     Write-Host "ERROR: Virtual environment not found at $venvActivate" -ForegroundColor Red
     exit 1
 }
@@ -43,7 +44,8 @@ foreach ($image in $testImages) {
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✓ $image - PASSED" -ForegroundColor Green
         $passed++
-    } else {
+    }
+    else {
         Write-Host "❌ $image - FAILED (exit code: $LASTEXITCODE)" -ForegroundColor Red
         $failed++
     }
@@ -58,7 +60,8 @@ Write-Host ""
 
 if ($failed -eq 0) {
     Write-Host "✓ All tests passed!" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "❌ Some tests failed" -ForegroundColor Red
 }
 
